@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Timers;
 
 namespace Cnc.cs
 {
-    public class TempObserver : IObserver
+    public class TempObserver
     {
         private readonly IAlert alert;
+        private Timer timer;
         private double temperature;
-        private Timer timer; // Timer for monitoring temperature every half-hour
         private const int ReportingInterval = 30 * 60 * 1000; // 30 minutes in milliseconds
 
         public TempObserver(IAlert alert)
@@ -22,8 +18,7 @@ namespace Cnc.cs
 
         private void SetupTimer()
         {
-            timer = new Timer();
-            timer.Interval = ReportingInterval;
+            timer = new Timer(ReportingInterval);
             timer.Elapsed += OnTimerElapsed;
             timer.AutoReset = true;
             timer.Start();
@@ -36,11 +31,5 @@ namespace Cnc.cs
                 alert.SendAlert("Operating temperature is above 35 degrees Celsius. Environment needs attention.");
             }
         }
-
-        public void Update(double temperature, double variation, int duration, SelfTestStatusCode statusCode)
-        {
-            this.temperature = temperature;
-        }
     }
 }
-
